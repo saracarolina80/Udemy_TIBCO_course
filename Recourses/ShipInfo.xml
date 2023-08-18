@@ -1,0 +1,10 @@
+<ShipInfo>
+        <ShipVia>2</ShipVia>
+        <Freight>3.35</Freight>
+        <ShipName>Great Lakes Food Market</ShipName>
+        <ShipAddress>2732 Baker Blvd.</ShipAddress>
+        <ShipCity>Eugene</ShipCity>
+        <ShipRegion>OR</ShipRegion>
+        <ShipPostalCode>97403</ShipPostalCode>
+        <ShipCountry>USA</ShipCountry>
+</ShipInfo>
