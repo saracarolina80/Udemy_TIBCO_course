@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ShipInfo xmlns="http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/ShipInfo.xsd">
-        <ShipVia>2</ShipVia>
-        <Freight>3.35</Freight>
-        <ShipName>Great Lakes Food Market</ShipName>
-        <ShipAddress>2732 Baker Blvd.</ShipAddress>
+        <ShipVia>7</ShipVia>
+        <Freight>4.35</Freight>
+        <ShipName>Aurora</ShipName>
+        <ShipAddress>27332 Lover Blvd.</ShipAddress>
         <ShipCity>Eugene</ShipCity>
-        <ShipRegion>OR</ShipRegion>
-        <ShipPostalCode>97403</ShipPostalCode>
-        <ShipCountry>USA</ShipCountry>
+        <ShipRegion>AL</ShipRegion>
+        <ShipPostalCode>97777</ShipPostalCode>
+        <ShipCountry>PT</ShipCountry>
 </ShipInfo>
