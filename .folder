@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002">
-    <folder resourceType="ae.rootfolder" name="Udemy_TIBCO_Course" propLocks="" allowUserToChangeIcon="false" sortContents="false" acceptsResources="true" allowDuplicates="false">
+    <folder resourceType="ae.rootfolder" name="Udemy_TIBCO_course" propLocks="" allowUserToChangeIcon="false" sortContents="false" acceptsResources="true" allowDuplicates="false">
         <fixedChildren>AESchemas</fixedChildren>
         <projectProperties>
             <property key="ae.pallette.tcp.pallette.version" value="5.13.0"/>
             <property key="palette.generalpalette.version" value="5.3.0"/>
             <property key="aa.adapteradministrator.palette.version" value="5.3.0"/>
             <property key="ae.palette.SOAPpalette.version" value="5.13.0"/>
-            <property key="projectName" value="Udemy_TIBCO_Course"/>
+            <property key="projectName" value="Udemy_TIBCO_course"/>
             <property key="ae.palette.Mail.palette.version" value="5.13.0"/>
             <property key="ae.palette.rvpalette.version" value="5.13.0"/>
             <property key="ae.palette.JMS.palette.version" value="5.13.0"/>
             <property key="service.palette.version" value="5.13.0"/>
             <property key="ae.palette.jrmi.palette.version" value="5.13.0"/>
             <property key="ae.palette.Filepalette.version" value="5.13.0"/>
-            <property key="wsdlresource.palette.version" value="5.13.0"/>
             <property key="ae.palette.FTPpalette.version" value="5.13.0"/>
+            <property key="wsdlresource.palette.version" value="5.13.0"/>
             <property key="ae.process.palette.version" value="5.13.0"/>
             <property key="httppalette.httpplugins.version" value="5.13.0"/>
             <property key="ae.palette.JDBCpalette.version" value="5.13.0"/>

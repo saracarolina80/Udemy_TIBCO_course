@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	 xmlns="http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/ShipInfo.xsd"
+	 xmlns:ShipInfo="http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/ShipInfo.xsd"
 	 targetNamespace="http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/ShipInfo.xsd"
 	 elementFormDefault="qualified"
 	 attributeFormDefault="unqualified">
@@ -10,6 +10,7 @@
 			<xs:sequence>
 				<xs:element name="ShipVia" type="xs:int"/>
 				<xs:element name="Freight" type="xs:float"/>
+				<xs:element name="ShipName" type="xs:string"/>
 				<xs:element name="ShipAddress" type="xs:string"/>
 				<xs:element name="ShipCity" type="xs:string"/>
 				<xs:element name="ShipRegion" type="xs:string"/>

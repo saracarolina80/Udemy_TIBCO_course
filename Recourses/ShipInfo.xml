@@ -1,4 +1,5 @@
-<ShipInfo>
+<?xml version='1.0' encoding='UTF-8'?>
+<ShipInfo xmlns="http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/ShipInfo.xsd">
         <ShipVia>2</ShipVia>
         <Freight>3.35</Freight>
         <ShipName>Great Lakes Food Market</ShipName>
