@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:Order xmlns:ns0="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Order">
+    <ns0:CustomerID>GREAL</ns0:CustomerID>
+    <ns0:EmployeeID>6</ns0:EmployeeID>
+    <ns0:OrderDate>2022-01-01T16:55:00.848Z</ns0:OrderDate>
+    <ns0:RequiredDate>2022-01-01T16:55:00.848Z</ns0:RequiredDate>
+    <ns1:ShipInfo xmlns:ns1="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/ShipInfo">
+        <ns1:ShipVia>2</ns1:ShipVia>
+        <ns1:Freight>4.42</ns1:Freight>
+        <ns1:ShipName>Great Lakes Food Market</ns1:ShipName>
+        <ns1:ShipAddress>2732 Baker Blvd.</ns1:ShipAddress>
+        <ns1:ShipCity>Eugene</ns1:ShipCity>
+        <ns1:ShipRegion>OR</ns1:ShipRegion>
+        <ns1:ShipPostalCode>97403</ns1:ShipPostalCode>
+        <ns1:ShipCountry>USA</ns1:ShipCountry>
+    </ns1:ShipInfo>
+</ns0:Order>

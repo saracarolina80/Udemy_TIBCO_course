@@ -1,0 +1,5 @@
+CostumerID: LOLES
+EmployeeID: 6
+OrderDate: 2022-01-01
+RequiredDate: 2022-01-01
+ShipInfo:24.42Great Lakes Food Market2732 Baker Blvd.EugeneOR97403USA

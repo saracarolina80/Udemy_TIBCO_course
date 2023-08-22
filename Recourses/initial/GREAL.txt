@@ -1,0 +1,5 @@
+CostumerID: GREAL
+EmployeeID: 5
+OrderDate: 2022-01-01
+RequiredDate: 2022-01-01
+ShipInfo:23.35Great Lakes Food Market2732 Baker Blvd.EugeneOR97403USA

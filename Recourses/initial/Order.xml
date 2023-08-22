@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Order xmlns = "http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/Order.xsd">
+		<CostumerID>GREAL</CostumerID>
+		<EmployeeID>5</EmployeeID>
+		<OrderDate>2022-01-01</OrderDate>
+		<RequiredDate>2022-01-01</RequiredDate>
+		<ShipInfo xmlns="http://www.tibco.com/schemas/Udemy_TIBCO_Course/SharedResources/Schemas/ShipInfo.xsd">
+            <ShipVia>7</ShipVia>
+            <Freight>4.35</Freight>
+            <ShipName>Aurora</ShipName>
+            <ShipAddress>27332 Lover Blvd.</ShipAddress>
+            <ShipCity>Eugene</ShipCity>
+            <ShipRegion>AL</ShipRegion>
+            <ShipPostalCode>97777</ShipPostalCode>
+            <ShipCountry>PT</ShipCountry>
+        </ShipInfo>
+</Order>
