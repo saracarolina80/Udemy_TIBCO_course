@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyRequest" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyResponse" xmlns:ns="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header" xmlns:pfx3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Response" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyRequest" schemaLocation="/Resources/Schemas/Services/CopyRequest.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyResponse" schemaLocation="/Resources/Schemas/Services/CopyResponse.xsd"/>
+    <pd:name>Processes/Services/SharedFolders/CopyFiles.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:CopyRequest"/>
+    <pd:startX>150</pd:startX>
+    <pd:startY>64</pd:startY>
+    <pd:returnBindings>
+        <pfx2:CopyResponse>
+            <ns:Header>
+                <ns3:Context>
+                    <ns3:correlationId>
+                        <xsl:value-of select="'123456'"/>
+                    </ns3:correlationId>
+                </ns3:Context>
+                <ns:timestamp>
+                    <xsl:value-of select="current-dateTime()"/>
+                </ns:timestamp>
+            </ns:Header>
+            <pfx2:Body>
+                <pfx3:Response>
+                    <pfx3:responseMessage>
+                        <xsl:value-of select="'file copied'"/>
+                    </pfx3:responseMessage>
+                    <pfx3:responseStatus>
+                        <xsl:value-of select="'SUCCESS'"/>
+                    </pfx3:responseStatus>
+                </pfx3:Response>
+            </pfx2:Body>
+        </pfx2:CopyResponse>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx2:CopyResponse"/>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1692718646752</pd:targetNamespace>
+    <pd:activity name="Copy File">
+        <pd:type>com.tibco.plugin.file.FileCopyActivity</pd:type>
+        <pd:resourceType>ae.activities.FileCopyActivity</pd:resourceType>
+        <pd:x>297</pd:x>
+        <pd:y>66</pd:y>
+        <config>
+            <createMissingDirectories>true</createMissingDirectories>
+            <includeSubDirectories>true</includeSubDirectories>
+            <overwrite>true</overwrite>
+        </config>
+        <pd:inputBindings>
+            <ns2:CopyActivityConfig>
+                <fromFileName>
+                    <xsl:value-of select="concat($Start/pfx:CopyRequest/pfx:Body/pfx:source/pfx:sourceDiretoryPath,$Start/pfx:CopyRequest/pfx:Body/pfx:source/pfx:sourceFileName)"/>
+                </fromFileName>
+                <toFileName>
+                    <xsl:value-of select="concat($Start/pfx:CopyRequest/pfx:Body/pfx:target/pfx:targetDiretoryPath,$Start/pfx:CopyRequest/pfx:Body/pfx:target/pfx:targetFileName)"/>
+                </toFileName>
+            </ns2:CopyActivityConfig>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Copy File</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Copy File</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns:Header="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header"
+	 xmlns:CopyRequest="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyRequest"
+	 targetNamespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyRequest"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header" schemaLocation="../Commons/Header.xsd"/>
+	<xs:element name="CopyRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Header:Header"/>
+				<xs:element ref="CopyRequest:Body"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Body">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="source">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="sourceDiretoryPath" type="xs:string"/>
+							<xs:element name="sourceFileName" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="target">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="targetDiretoryPath" type="xs:string"/>
+							<xs:element name="targetFileName" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
