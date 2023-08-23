@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/RemoveFileRequest" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/RemoveFileResponse" xmlns:ns="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Response">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/RemoveFileRequest" schemaLocation="/Resources/Schemas/Services/RemoveFileRequest.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/RemoveFileResponse" schemaLocation="/Resources/Schemas/Services/RemoveFileResponse.xsd"/>
+    <pd:name>Processes/Services/SharedFolders/RemoveFile.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:RemoveFileRequest"/>
+    <pd:startX>49</pd:startX>
+    <pd:startY>185</pd:startY>
+    <pd:returnBindings>
+        <pfx2:RemoveFileResponse>
+            <xsl:copy-of select="$Start/pfx:RemoveFileRequest/ns:Header"/>
+            <pfx2:Body>
+                <ns3:Response>
+                    <ns3:responseMessage>
+                        <xsl:value-of select="'file has been removed'"/>
+                    </ns3:responseMessage>
+                    <ns3:responseStatus>
+                        <xsl:value-of select="'SUCCESS'"/>
+                    </ns3:responseStatus>
+                    <ns3:data>
+                        <xsl:copy-of select="$Remove-File/ns2:RemoveActivityOutputClass/fileInfo"/>
+                    </ns3:data>
+                </ns3:Response>
+            </pfx2:Body>
+        </pfx2:RemoveFileResponse>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx2:RemoveFileResponse"/>
+    <pd:endX>628</pd:endX>
+    <pd:endY>187</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1692782863756</pd:targetNamespace>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>174</pd:x>
+        <pd:y>55</pd:y>
+        <pd:width>352</pd:width>
+        <pd:height>283</pd:height>
+        <pd:collapsedWidth>52</pd:collapsedWidth>
+        <pd:collapsedHeight>69</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <config>
+            <pd:groupType>errorLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>index</pd:indexSlot>
+            <pd:errorCondition>$index = '3'</pd:errorCondition>
+            <pd:suspendAfterErrorRetry>false</pd:suspendAfterErrorRetry>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>Remove File</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Remove File</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Remove File</pd:from>
+            <pd:to>Sleep</pd:to>
+            <pd:xpathDescription>Error</pd:xpathDescription>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-65536</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Sleep</pd:from>
+            <pd:to>Generate Error</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-65485</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="Remove File">
+            <pd:type>com.tibco.plugin.file.FileRemoveActivity</pd:type>
+            <pd:resourceType>ae.activities.FileRemoveActivity</pd:resourceType>
+            <pd:x>289</pd:x>
+            <pd:y>123</pd:y>
+            <config/>
+            <pd:inputBindings>
+                <ns2:RemoveActivityInputClass>
+                    <fileName>
+                        <xsl:value-of select="concat($Start/pfx:RemoveFileRequest/pfx:Body/pfx:sourcePath,$Start/pfx:RemoveFileRequest/pfx:Body/pfx:sourceFileName)"/>
+                    </fileName>
+                </ns2:RemoveActivityInputClass>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="Sleep">
+            <pd:type>com.tibco.plugin.timer.SleepActivity</pd:type>
+            <pd:resourceType>ae.activities.sleep</pd:resourceType>
+            <pd:x>292</pd:x>
+            <pd:y>282</pd:y>
+            <config/>
+            <pd:inputBindings>
+                <ns0:SleepInputSchema xmlns:ns0="www.tibco.com/plugin/Sleep">
+                    <IntervalInMillisec>
+                        <xsl:value-of select="$index * 1000"/>
+                    </IntervalInMillisec>
+                </ns0:SleepInputSchema>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="Generate Error">
+            <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+            <pd:resourceType>ae.activities.throw</pd:resourceType>
+            <pd:x>460</pd:x>
+            <pd:y>282</pd:y>
+            <config>
+                <faultName/>
+            </config>
+            <pd:inputBindings>
+                <ns0:ActivityInput xmlns:ns0="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema">
+                    <message>
+                        <xsl:value-of select="concat('file ',  $index , ' has not been removed. Retry attempt' )"/>
+                    </message>
+                </ns0:ActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
