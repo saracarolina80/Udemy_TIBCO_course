@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Order" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/ShipInfo" xmlns:ns="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Users" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns3="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Orders">
+    <xsd:import namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Users" schemaLocation="/Resources/Schemas/Models/Users.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Orders" schemaLocation="/Resources/Schemas/Models/Orders.xsd"/>
+    <pd:name>Processes/Services/SharedFolders/CreateOrdersCSVFiles.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>41</pd:startX>
+    <pd:startY>134</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>1101</pd:endX>
+    <pd:endY>166</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1692784772819</pd:targetNamespace>
+    <pd:activity name="Create CSV file with Header">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>361</pd:x>
+        <pd:y>141</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+        </config>
+        <pd:inputBindings>
+            <ns2:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="'C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\orders.csv'"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="$Create-Header-Data/Text"/>
+                </textContent>
+            </ns2:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Create Header Data">
+        <pd:type>com.tibco.plugin.parse.RenderActivity</pd:type>
+        <pd:resourceType>ae.activities.RenderActivity</pd:resourceType>
+        <pd:x>175</pd:x>
+        <pd:y>134</pd:y>
+        <config>
+            <ParseSharedConfig>/Resources/CSV/OrdersDataFormat.sharedparse</ParseSharedConfig>
+        </config>
+        <pd:inputBindings>
+            <Rows>
+                <Order>
+                    <CostumerID>
+                        <xsl:value-of select="concat('&quot;','CostumerID','&quot;')"/>
+                    </CostumerID>
+                    <EmployeeID>
+                        <xsl:value-of select="concat('&quot;','EmployeeID','&quot;')"/>
+                    </EmployeeID>
+                    <OrderDate>
+                        <xsl:value-of select="concat('&quot;','OrderDate','&quot;')"/>
+                    </OrderDate>
+                    <RequiredDate>
+                        <xsl:value-of select="concat('&quot;','RequiredDate','&quot;')"/>
+                    </RequiredDate>
+                    <ShipVia>
+                        <xsl:value-of select="concat('&quot;','SHIPVIA','&quot;')"/>
+                    </ShipVia>
+                    <Freight>
+                        <xsl:value-of select="concat('&quot;','FREIGHT','&quot;')"/>
+                    </Freight>
+                    <ShipName>
+                        <xsl:value-of select="concat('&quot;','SHIPNAME','&quot;')"/>
+                    </ShipName>
+                    <ShipAddress>
+                        <xsl:value-of select="concat('&quot;','SHIPADDRESS','&quot;')"/>
+                    </ShipAddress>
+                    <ShipCity>
+                        <xsl:value-of select="concat('&quot;','SHIPCITY','&quot;')"/>
+                    </ShipCity>
+                    <ShipRegion>
+                        <xsl:value-of select="concat('&quot;','SHIPREGION','&quot;')"/>
+                    </ShipRegion>
+                    <ShipPostalCode>
+                        <xsl:value-of select="concat('&quot;','SHIPPOSTALCODE','&quot;')"/>
+                    </ShipPostalCode>
+                    <ShipCountry>
+                        <xsl:value-of select="concat('&quot;','SHIPCOUNTRY','&quot;')"/>
+                    </ShipCountry>
+                </Order>
+            </Rows>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Sample Orders Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>509</pd:x>
+        <pd:y>136</pd:y>
+        <config>
+            <element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="ns3:Order" minOccurs="0" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <ns3:Order>
+                    <pfx:Order>
+                        <pfx:CustomerID>
+                            <xsl:value-of select="'GREAL'"/>
+                        </pfx:CustomerID>
+                        <pfx:EmployeeID>
+                            <xsl:value-of select="'1'"/>
+                        </pfx:EmployeeID>
+                        <pfx:OrderDate>
+                            <xsl:value-of select="'2022-01-01T16:55:00.848Z'"/>
+                        </pfx:OrderDate>
+                        <pfx:RequiredDate>
+                            <xsl:value-of select="'2022-01-01T16:55:00.848Z'"/>
+                        </pfx:RequiredDate>
+                        <pfx2:ShipInfo>
+                            <pfx2:ShipVia>
+                                <xsl:value-of select="'2'"/>
+                            </pfx2:ShipVia>
+                            <pfx2:Freight>
+                                <xsl:value-of select="'3.5'"/>
+                            </pfx2:Freight>
+                            <pfx2:ShipName>
+                                <xsl:value-of select="'Great Lakes Food Market'"/>
+                            </pfx2:ShipName>
+                            <pfx2:ShipAddress>
+                                <xsl:value-of select="'2732 Baker Blvd.'"/>
+                            </pfx2:ShipAddress>
+                            <pfx2:ShipCity>
+                                <xsl:value-of select="'Eugene'"/>
+                            </pfx2:ShipCity>
+                            <pfx2:ShipRegion>
+                                <xsl:value-of select="'OR'"/>
+                            </pfx2:ShipRegion>
+                            <pfx2:ShipPostalCode>
+                                <xsl:value-of select="'97803'"/>
+                            </pfx2:ShipPostalCode>
+                            <pfx2:ShipCountry>
+                                <xsl:value-of select="'USA'"/>
+                            </pfx2:ShipCountry>
+                        </pfx2:ShipInfo>
+                    </pfx:Order>
+                </ns3:Order>
+                <ns3:Order>
+                    <pfx:Order>
+                        <pfx:CustomerID>
+                            <xsl:value-of select="'ASNO'"/>
+                        </pfx:CustomerID>
+                        <pfx:EmployeeID>
+                            <xsl:value-of select="'545'"/>
+                        </pfx:EmployeeID>
+                        <pfx:OrderDate>
+                            <xsl:value-of select="'2022-01-01T16:55:00.848Z'"/>
+                        </pfx:OrderDate>
+                        <pfx:RequiredDate>
+                            <xsl:value-of select="'2022-01-01T16:55:00.848Z'"/>
+                        </pfx:RequiredDate>
+                        <pfx2:ShipInfo>
+                            <pfx2:ShipVia>
+                                <xsl:value-of select="'4'"/>
+                            </pfx2:ShipVia>
+                            <pfx2:Freight>
+                                <xsl:value-of select="'3.5'"/>
+                            </pfx2:Freight>
+                            <pfx2:ShipName>
+                                <xsl:value-of select="'Great ST Margaret'"/>
+                            </pfx2:ShipName>
+                            <pfx2:ShipAddress>
+                                <xsl:value-of select="'2732 Baker Blvd.'"/>
+                            </pfx2:ShipAddress>
+                            <pfx2:ShipCity>
+                                <xsl:value-of select="'BRAGANÇA'"/>
+                            </pfx2:ShipCity>
+                            <pfx2:ShipRegion>
+                                <xsl:value-of select="'OR'"/>
+                            </pfx2:ShipRegion>
+                            <pfx2:ShipPostalCode>
+                                <xsl:value-of select="'97803'"/>
+                            </pfx2:ShipPostalCode>
+                            <pfx2:ShipCountry>
+                                <xsl:value-of select="'PT'"/>
+                            </pfx2:ShipCountry>
+                        </pfx2:ShipInfo>
+                    </pfx:Order>
+                </ns3:Order>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>598</pd:x>
+        <pd:y>10</pd:y>
+        <pd:width>377</pd:width>
+        <pd:height>302</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>inputLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:over>$Sample-Orders-Data/root/ns3:Order</pd:over>
+            <pd:iterationElementSlot>current-row</pd:iterationElementSlot>
+            <pd:indexSlot>index</pd:indexSlot>
+            <pd:activityOutputName>Append Order Row to CSV file</pd:activityOutputName>
+            <pd:accumulateOutput>false</pd:accumulateOutput>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>Render Current Row Orders Data</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Append Order Row to CSV file</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Render Current Row Orders Data</pd:from>
+            <pd:to>Append Order Row to CSV file</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Render Current Row Orders Data</pd:from>
+            <pd:to>Generate Error</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-65536</pd:lineColor>
+            <pd:conditionType>xpath</pd:conditionType>
+            <pd:xpath>$Render-Current-Row-Orders-Data/Text = '  '</pd:xpath>
+        </pd:transition>
+        <pd:activity name="Append Order Row to CSV file">
+            <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+            <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+            <pd:x>862</pd:x>
+            <pd:y>113</pd:y>
+            <config>
+                <encoding>text</encoding>
+                <compressFile>None</compressFile>
+                <append>true</append>
+            </config>
+            <pd:inputBindings>
+                <ns2:WriteActivityInputTextClass>
+                    <fileName>
+                        <xsl:value-of select="'C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\orders.csv'"/>
+                    </fileName>
+                    <textContent>
+                        <xsl:value-of select="$Render-Current-Row-Orders-Data/Text"/>
+                    </textContent>
+                </ns2:WriteActivityInputTextClass>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="Render Current Row Orders Data">
+            <pd:type>com.tibco.plugin.parse.RenderActivity</pd:type>
+            <pd:resourceType>ae.activities.RenderActivity</pd:resourceType>
+            <pd:x>724</pd:x>
+            <pd:y>115</pd:y>
+            <config>
+                <ParseSharedConfig>/Resources/CSV/OrdersDataFormat.sharedparse</ParseSharedConfig>
+            </config>
+            <pd:inputBindings>
+                <Rows>
+                    <Order>
+                        <CostumerID>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx:CustomerID"/>
+                        </CostumerID>
+                        <EmployeeID>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx:EmployeeID"/>
+                        </EmployeeID>
+                        <OrderDate>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx:OrderDate"/>
+                        </OrderDate>
+                        <RequiredDate>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx:RequiredDate"/>
+                        </RequiredDate>
+                        <ShipVia>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipVia"/>
+                        </ShipVia>
+                        <Freight>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:Freight"/>
+                        </Freight>
+                        <ShipName>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipName"/>
+                        </ShipName>
+                        <ShipAddress>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipAddress"/>
+                        </ShipAddress>
+                        <ShipCity>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipCity"/>
+                        </ShipCity>
+                        <ShipRegion>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipRegion"/>
+                        </ShipRegion>
+                        <ShipPostalCode>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipPostalCode"/>
+                        </ShipPostalCode>
+                        <ShipCountry>
+                            <xsl:value-of select="$current-row/ns3:Order/pfx:Order[$index]/pfx2:ShipInfo/pfx2:ShipCountry"/>
+                        </ShipCountry>
+                    </Order>
+                </Rows>
+            </pd:inputBindings>
+        </pd:activity>
+        <pd:activity name="Generate Error">
+            <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+            <pd:resourceType>ae.activities.throw</pd:resourceType>
+            <pd:x>723</pd:x>
+            <pd:y>258</pd:y>
+            <config>
+                <faultName/>
+            </config>
+            <pd:inputBindings>
+                <ns0:ActivityInput xmlns:ns0="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema">
+                    <message>
+                        <xsl:value-of select="concat($current-row/ns3:Order/pfx:Order[$index], 'is null' )"/>
+                    </message>
+                </ns0:ActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Create Header Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Create Header Data</pd:from>
+        <pd:to>Create CSV file with Header</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Create CSV file with Header</pd:from>
+        <pd:to>Sample Orders Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Sample Orders Data</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
