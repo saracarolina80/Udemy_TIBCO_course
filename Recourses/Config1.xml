@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DataDefinition>
+   <Element>
+			<sourcePath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\Portugal\</sourcePath>
+			<sourceFilePattern>*</sourceFilePattern>
+   </Element>
+   <Element>
+		<sourcePath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\Spain\</sourcePath>
+		<sourceFilePattern>*</sourceFilePattern>
+   </Element>
+   <Element>
+		
+			<sourcePath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\Germany\</sourcePath>
+			<sourceFilePattern>*</sourceFilePattern>
+   </Element>
+</DataDefinition>

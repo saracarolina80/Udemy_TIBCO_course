@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DataDefinition>
+   <Element>
+		<source>
+			<sourcePath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\Portugal\</sourcePath>
+			<sourceFilePattern>*</sourceFilePattern>
+		</source>
+		<target>
+			<targetPath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Output\Portugal\</targetPath>
+		</target>
+		<messageSelector>PT</messageSelector>
+   </Element>
+   <Element>
+		<source>
+			<sourcePath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\Spain\</sourcePath>
+		<sourceFilePattern>*</sourceFilePattern>
+		</source>
+		<target>
+			<targetPath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Output\Spain\</targetPath>
+		</target>
+		<messageSelector>SP</messageSelector>
+   </Element>
+   <Element>
+		<source>
+			<sourcePath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\Germany\</sourcePath>
+			<sourceFilePattern>*</sourceFilePattern>
+		</source>
+		<target>
+			<targetPath>C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Output\Germany\</targetPath>
+		</target>
+		<messageSelector>GER</messageSelector>
+   </Element>
+</DataDefinition>

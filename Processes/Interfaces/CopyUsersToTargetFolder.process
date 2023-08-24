@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" xmlns:ns="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns1="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderRequest.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderResponse.xsd"/>
+    <pd:name>Processes/Interfaces/CopyUsersToTargetFolder.process</pd:name>
+    <pd:startName>JMS Queue Receiver</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="JMS Queue Receiver">
+        <pd:type>com.tibco.plugin.jms.JMSQueueEventSource</pd:type>
+        <pd:resourceType>ae.activities.JMSQueueEventSource</pd:resourceType>
+        <pd:x>84</pd:x>
+        <pd:y>53</pd:y>
+        <config>
+            <PermittedMessageType>XML Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>%%Resources/Connections/JMS/CopyUsersQueue%%</destination>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/Resources/Connections/JMS/JMS Connection.sharedjmscon</ConnectionReference>
+            <OutDataxsdString ref="pfx2:CopyUsersToTargetFolder"/>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>563</pd:endX>
+    <pd:endY>53</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1692803092274</pd:targetNamespace>
+    <pd:activity name="MainCopyUsersToTargetFolder">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>240</pd:x>
+        <pd:y>53</pd:y>
+        <config>
+            <processName>/Processes/Interfaces/MainCopyUsersToTargetFolder.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx2:CopyUsersToTargetFolder>
+                <ns1:Header>
+                    <ns:Context>
+                        <ns:correlationId>
+                            <xsl:value-of select="'9999999'"/>
+                        </ns:correlationId>
+                        <xsl:if test="$JMS-Queue-Receiver/ns2:ActivityOutput/Body/pfx2:CopyUsersToTargetFolder/ns1:Header/ns:Context/ns:correlationId">
+                            <ns:parentCorrelationId>
+                                <xsl:value-of select="$JMS-Queue-Receiver/ns2:ActivityOutput/Body/pfx2:CopyUsersToTargetFolder/ns1:Header/ns:Context/ns:correlationId"/>
+                            </ns:parentCorrelationId>
+                        </xsl:if>
+                    </ns:Context>
+                    <ns1:timestamp>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </ns1:timestamp>
+                </ns1:Header>
+                <xsl:copy-of select="$JMS-Queue-Receiver/ns2:ActivityOutput/Body/pfx2:CopyUsersToTargetFolder/pfx2:Body"/>
+            </pfx2:CopyUsersToTargetFolder>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Reply to JMS Message">
+        <pd:type>com.tibco.plugin.jms.JMSReplyActivity</pd:type>
+        <pd:resourceType>ae.activities.JMSReplyActivity</pd:resourceType>
+        <pd:x>393</pd:x>
+        <pd:y>61</pd:y>
+        <config>
+            <PermittedMessageType>XML Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+                <EventSource>JMS Queue Receiver</EventSource>
+            </ConfigurableHeaders>
+            <InDataxsdString ref="pfx:CopyUsersToTargetFolderResponse"/>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <Body>
+                    <xsl:copy-of select="$MainCopyUsersToTargetFolder/pfx:CopyUsersToTargetFolderResponse"/>
+                </Body>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>JMS Queue Receiver</pd:from>
+        <pd:to>MainCopyUsersToTargetFolder</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>MainCopyUsersToTargetFolder</pd:from>
+        <pd:to>Reply to JMS Message</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Reply to JMS Message</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

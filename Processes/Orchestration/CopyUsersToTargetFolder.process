@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header">
+    <xsd:import namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderRequest.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderResponse.xsd"/>
+    <pd:name>Processes/Orchestration/CopyUsersToTargetFolder.process</pd:name>
+    <pd:startName>Timer</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="Timer">
+        <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>
+        <pd:resourceType>ae.activities.timer</pd:resourceType>
+        <pd:x>70</pd:x>
+        <pd:y>72</pd:y>
+        <config>
+            <StartTime>1692803406000</StartTime>
+            <Frequency>true</Frequency>
+            <TimeInterval>1</TimeInterval>
+            <FrequencyIndex>Second</FrequencyIndex>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>524</pd:endX>
+    <pd:endY>72</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1692803049608</pd:targetNamespace>
+    <pd:activity name="JMS Queue Requestor">
+        <pd:type>com.tibco.plugin.jms.JMSQueueRequestReplyActivity</pd:type>
+        <pd:resourceType>ae.activities.JMSQueueRequestReplyActivity</pd:resourceType>
+        <pd:x>225</pd:x>
+        <pd:y>81</pd:y>
+        <config>
+            <PermittedMessageType>XML Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>%%Resources/Connections/JMS/CopyUsersQueue%%</destination>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/Resources/Connections/JMS/JMS Connection.sharedjmscon</ConnectionReference>
+            <InDataxsdString ref="pfx2:CopyUsersToTargetFolder"/>
+            <OutDataxsdString ref="pfx:CopyUsersToTargetFolderResponse"/>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <Body>
+                    <pfx2:CopyUsersToTargetFolder>
+                        <ns3:Header>
+                            <pfx3:Context>
+                                <pfx3:correlationId>
+                                    <xsl:value-of select="'1111111'"/>
+                                </pfx3:correlationId>
+                            </pfx3:Context>
+                            <ns3:timestamp>
+                                <xsl:value-of select="current-dateTime()"/>
+                            </ns3:timestamp>
+                        </ns3:Header>
+                        <pfx2:Body>
+                            <pfx2:source>
+                                <pfx2:sourceDiretoryPath>
+                                    <xsl:value-of select="'C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Input\'"/>
+                                </pfx2:sourceDiretoryPath>
+                                <pfx2:sourceFileName>
+                                    <xsl:value-of select="'users2.csv'"/>
+                                </pfx2:sourceFileName>
+                            </pfx2:source>
+                            <pfx2:target>
+                                <pfx2:targetDiretoryPath>
+                                    <xsl:value-of select="'C:\Users\Utilizador\Desktop\Udemy_TIBCO_Course\Udemy_TIBCO_course\Recourses\Output\'"/>
+                                </pfx2:targetDiretoryPath>
+                                <pfx2:targetFileName>
+                                    <xsl:value-of select="'final-users2.csv'"/>
+                                </pfx2:targetFileName>
+                            </pfx2:target>
+                        </pfx2:Body>
+                    </pfx2:CopyUsersToTargetFolder>
+                </Body>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Log">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>370</pd:x>
+        <pd:y>72</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <message>
+                    <xsl:value-of select="tib:render-xml($JMS-Queue-Requestor/ns2:ActivityOutput/Body/pfx:CopyUsersToTargetFolderResponse, false(),false())"/>
+                </message>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Timer</pd:from>
+        <pd:to>JMS Queue Requestor</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JMS Queue Requestor</pd:from>
+        <pd:to>Log</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Log</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
