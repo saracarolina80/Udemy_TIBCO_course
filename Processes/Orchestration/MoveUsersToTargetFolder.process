@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/MoveUsersToTargetFolder" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns2="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header">
     <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/MoveUsersToTargetFolder" schemaLocation="/Resources/Schemas/Orchestration/MoveUsersToTargetFolder.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" schemaLocation="/Resources/Schemas/Commons/Context.xsd"/>
     <pd:name>Processes/Orchestration/MoveUsersToTargetFolder.process</pd:name>
     <pd:startName>Timer</pd:startName>
     <pd:startX>0</pd:startX>
@@ -9,8 +10,8 @@
     <pd:starter name="Timer">
         <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>
         <pd:resourceType>ae.activities.timer</pd:resourceType>
-        <pd:x>100</pd:x>
-        <pd:y>65</pd:y>
+        <pd:x>89</pd:x>
+        <pd:y>61</pd:y>
         <config>
             <StartTime>1692799500000</StartTime>
             <Frequency>true</Frequency>
@@ -20,16 +21,18 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>572</pd:endX>
-    <pd:endY>68</pd:endY>
+    <pd:endX>762</pd:endX>
+    <pd:endY>64</pd:endY>
     <pd:errorSchemas/>
-    <pd:processVariables/>
+    <pd:processVariables>
+        <Context ref="pfx2:Context"/>
+    </pd:processVariables>
     <pd:targetNamespace>http://xmlns.example.com/1692799154923</pd:targetNamespace>
     <pd:activity name="JMS Queue Sender">
         <pd:type>com.tibco.plugin.jms.JMSQueueSendActivity</pd:type>
         <pd:resourceType>ae.activities.JMSQueueSendActivity</pd:resourceType>
-        <pd:x>272</pd:x>
-        <pd:y>68</pd:y>
+        <pd:x>585</pd:x>
+        <pd:y>65</pd:y>
         <config>
             <PermittedMessageType>XML Text</PermittedMessageType>
             <SessionAttributes>
@@ -51,11 +54,7 @@
                 <Body>
                     <pfx:MoveUsersToTargetFolder>
                         <ns2:Header>
-                            <pfx2:Context>
-                                <pfx2:correlationId>
-                                    <xsl:value-of select="'1234567'"/>
-                                </pfx2:correlationId>
-                            </pfx2:Context>
+                            <xsl:copy-of select="$Context/pfx2:Context"/>
                             <ns2:timestamp>
                                 <xsl:value-of select="current-dateTime()"/>
                             </ns2:timestamp>
@@ -83,9 +82,35 @@
             </ns:ActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="GenerateUUID">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>259</pd:x>
+        <pd:y>59</pd:y>
+        <config>
+            <processName>/Processes/Commons/GenerateUUID.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Assign Context">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>417</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <variableName>Context</variableName>
+        </config>
+        <pd:inputBindings>
+            <pfx2:Context>
+                <pfx2:correlationId>
+                    <xsl:value-of select="$GenerateUUID/uuid/correlationID"/>
+                </pfx2:correlationId>
+            </pfx2:Context>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>Timer</pd:from>
-        <pd:to>JMS Queue Sender</pd:to>
+        <pd:to>GenerateUUID</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -93,6 +118,20 @@
     <pd:transition>
         <pd:from>JMS Queue Sender</pd:from>
         <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateUUID</pd:from>
+        <pd:to>Assign Context</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign Context</pd:from>
+        <pd:to>JMS Queue Sender</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>

@@ -11,7 +11,7 @@
         <pd:x>176</pd:x>
         <pd:y>90</pd:y>
         <config>
-            <pollInterval>10</pollInterval>
+            <pollInterval>3</pollInterval>
             <createEvent>true</createEvent>
             <modifyEvent>true</modifyEvent>
             <deleteEvent>true</deleteEvent>
@@ -25,8 +25,8 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>490</pd:endX>
-    <pd:endY>90</pd:endY>
+    <pd:endX>626</pd:endX>
+    <pd:endY>88</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1692784353536</pd:targetNamespace>
@@ -46,6 +46,16 @@
             </ns:ActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="RunningCounter">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>478</pd:x>
+        <pd:y>90</pd:y>
+        <config>
+            <processName>/Processes/Commons/RunningCounter.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
     <pd:transition>
         <pd:from>File Poller</pd:from>
         <pd:to>Log File Info</pd:to>
@@ -55,6 +65,13 @@
     </pd:transition>
     <pd:transition>
         <pd:from>Log File Info</pd:from>
+        <pd:to>RunningCounter</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>RunningCounter</pd:from>
         <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>

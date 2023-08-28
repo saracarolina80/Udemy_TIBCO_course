@@ -2,6 +2,7 @@
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" xmlns:ns="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns1="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header">
     <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderRequest.xsd"/>
     <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderResponse.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" schemaLocation="/Resources/Schemas/Commons/Context.xsd"/>
     <pd:name>Processes/Interfaces/CopyUsersToTargetFolder.process</pd:name>
     <pd:startName>JMS Queue Receiver</pd:startName>
     <pd:startX>0</pd:startX>
@@ -31,15 +32,17 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>563</pd:endX>
-    <pd:endY>53</pd:endY>
+    <pd:endX>863</pd:endX>
+    <pd:endY>54</pd:endY>
     <pd:errorSchemas/>
-    <pd:processVariables/>
+    <pd:processVariables>
+        <Context ref="ns:Context"/>
+    </pd:processVariables>
     <pd:targetNamespace>http://xmlns.example.com/1692803092274</pd:targetNamespace>
     <pd:activity name="MainCopyUsersToTargetFolder">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>240</pd:x>
+        <pd:x>559</pd:x>
         <pd:y>53</pd:y>
         <config>
             <processName>/Processes/Interfaces/MainCopyUsersToTargetFolder.process</processName>
@@ -68,8 +71,8 @@
     <pd:activity name="Reply to JMS Message">
         <pd:type>com.tibco.plugin.jms.JMSReplyActivity</pd:type>
         <pd:resourceType>ae.activities.JMSReplyActivity</pd:resourceType>
-        <pd:x>393</pd:x>
-        <pd:y>61</pd:y>
+        <pd:x>693</pd:x>
+        <pd:y>62</pd:y>
         <config>
             <PermittedMessageType>XML Text</PermittedMessageType>
             <SessionAttributes>
@@ -93,9 +96,45 @@
             </ns2:ActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="GenerateUUIDv2">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>215</pd:x>
+        <pd:y>52</pd:y>
+        <config>
+            <processName>/Processes/Commons/GenerateUUIDv2.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Get UUID">
+        <pd:type>com.tibco.pe.core.GetSharedVariableActivity</pd:type>
+        <pd:resourceType>ae.activities.getSharedVariable</pd:resourceType>
+        <pd:x>331</pd:x>
+        <pd:y>50</pd:y>
+        <config>
+            <variableConfig>/Resources/SharedVariables/UUID.jobsharedvariable</variableConfig>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Assign Context">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>438</pd:x>
+        <pd:y>54</pd:y>
+        <config>
+            <variableName>Context</variableName>
+        </config>
+        <pd:inputBindings>
+            <ns:Context>
+                <ns:correlationId>
+                    <xsl:value-of select="$Get-UUID/uuid/correlationID"/>
+                </ns:correlationId>
+            </ns:Context>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>JMS Queue Receiver</pd:from>
-        <pd:to>MainCopyUsersToTargetFolder</pd:to>
+        <pd:to>GenerateUUIDv2</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -110,6 +149,27 @@
     <pd:transition>
         <pd:from>Reply to JMS Message</pd:from>
         <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateUUIDv2</pd:from>
+        <pd:to>Get UUID</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Get UUID</pd:from>
+        <pd:to>Assign Context</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign Context</pd:from>
+        <pd:to>MainCopyUsersToTargetFolder</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>

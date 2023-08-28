@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/Resources/Schemas/Models/DataDefinition.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Orchestration/ProcessFilesRequest" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/file/v2" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/file">
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/ns/no_namespace_schema_location/Resources/Schemas/Models/DataDefinition.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Orchestration/ProcessFilesRequest" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/file/v2" xmlns:pfx3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" xmlns:ns0="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns2="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/file">
     <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/ns/no_namespace_schema_location/Resources/Schemas/Models/DataDefinition.xsd" schemaLocation="/Resources/Schemas/Models/DataDefinition.xsd"/>
     <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Orchestration/ProcessFilesRequest" schemaLocation="/Resources/Schemas/Orchestration/ProcessFilesRequest.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" schemaLocation="/Resources/Schemas/Commons/Context.xsd"/>
     <pd:name>Processes/Orchestration/ProcessFiles.process</pd:name>
     <pd:startName>Timer</pd:startName>
     <pd:startX>0</pd:startX>
@@ -21,16 +22,18 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>814</pd:endX>
-    <pd:endY>86</pd:endY>
+    <pd:endX>1116</pd:endX>
+    <pd:endY>82</pd:endY>
     <pd:errorSchemas/>
-    <pd:processVariables/>
+    <pd:processVariables>
+        <Context ref="pfx3:Context"/>
+    </pd:processVariables>
     <pd:targetNamespace>http://xmlns.example.com/1692883167063</pd:targetNamespace>
     <pd:activity name="Parse XML">
         <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
         <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
-        <pd:x>409</pd:x>
-        <pd:y>90</pd:y>
+        <pd:x>711</pd:x>
+        <pd:y>86</pd:y>
         <config>
             <inputStyle>text</inputStyle>
             <xsdVersion>default</xsdVersion>
@@ -46,8 +49,8 @@
     <pd:activity name="Read File">
         <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
         <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
-        <pd:x>276</pd:x>
-        <pd:y>91</pd:y>
+        <pd:x>578</pd:x>
+        <pd:y>87</pd:y>
         <config>
             <encoding>text</encoding>
         </config>
@@ -62,13 +65,14 @@
     <pd:group name="Group">
         <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
         <pd:resourceType>ae.process.group</pd:resourceType>
-        <pd:x>494</pd:x>
-        <pd:y>4</pd:y>
+        <pd:x>797</pd:x>
+        <pd:y>1</pd:y>
         <pd:width>225</pd:width>
         <pd:height>155</pd:height>
-        <pd:collapsedWidth>52</pd:collapsedWidth>
-        <pd:collapsedHeight>69</pd:collapsedHeight>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
         <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
         <config>
             <pd:groupType>inputLoop</pd:groupType>
             <pd:serializable>false</pd:serializable>
@@ -97,8 +101,8 @@
         <pd:activity name="JMS Topic Publisher">
             <pd:type>com.tibco.plugin.jms.JMSTopicPublishActivity</pd:type>
             <pd:resourceType>ae.activities.JMSTopicPublishActivity</pd:resourceType>
-            <pd:x>603</pd:x>
-            <pd:y>96</pd:y>
+            <pd:x>905</pd:x>
+            <pd:y>92</pd:y>
             <config>
                 <PermittedMessageType>XML Text</PermittedMessageType>
                 <SessionAttributes>
@@ -117,7 +121,7 @@
                 <InDataxsdString ref="pfx2:ProcessFilesRequest"/>
             </config>
             <pd:inputBindings>
-                <ns0:ActivityInput xmlns:ns0="http://www.tibco.com/namespaces/tnt/plugins/jms">
+                <ns0:ActivityInput>
                     <OtherProperties>
                         <country>
                             <xsl:value-of select="$current-element/Element/messageSelector"/>
@@ -125,12 +129,8 @@
                     </OtherProperties>
                     <Body>
                         <pfx2:ProcessFilesRequest>
-                            <ns2:Header xmlns:ns2="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header">
-                                <ns3:Context xmlns:ns3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context">
-                                    <ns3:correlationId>
-                                        <xsl:value-of select="'1234567'"/>
-                                    </ns3:correlationId>
-                                </ns3:Context>
+                            <ns2:Header>
+                                <xsl:copy-of select="$Context/pfx3:Context"/>
                                 <ns2:timestamp>
                                     <xsl:value-of select="current-dateTime()"/>
                                 </ns2:timestamp>
@@ -156,9 +156,31 @@
             </pd:inputBindings>
         </pd:activity>
     </pd:group>
+    <pd:activity name="GenerateUUID">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>303</pd:x>
+        <pd:y>91</pd:y>
+        <config>
+            <processName>/Processes/Commons/GenerateUUID.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Assign Context">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>432</pd:x>
+        <pd:y>87</pd:y>
+        <config>
+            <variableName>Context</variableName>
+        </config>
+        <pd:inputBindings>
+            <xsl:copy-of select="$Context/pfx3:Context"/>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>Timer</pd:from>
-        <pd:to>Read File</pd:to>
+        <pd:to>GenerateUUID</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -180,6 +202,20 @@
     <pd:transition>
         <pd:from>Group</pd:from>
         <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateUUID</pd:from>
+        <pd:to>Assign Context</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign Context</pd:from>
+        <pd:to>Read File</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>

@@ -2,6 +2,7 @@
 <pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" xmlns:ns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header">
     <xsd:import namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderRequest" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderRequest.xsd"/>
     <xsd:import namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/CopyUsersToTargetFolderResponse" schemaLocation="/Resources/Schemas/Orchestration/CopyUsersToTargetFolderResponse.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Context" schemaLocation="/Resources/Schemas/Commons/Context.xsd"/>
     <pd:name>Processes/Orchestration/CopyUsersToTargetFolder.process</pd:name>
     <pd:startName>Timer</pd:startName>
     <pd:startX>0</pd:startX>
@@ -10,8 +11,8 @@
     <pd:starter name="Timer">
         <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>
         <pd:resourceType>ae.activities.timer</pd:resourceType>
-        <pd:x>70</pd:x>
-        <pd:y>72</pd:y>
+        <pd:x>67</pd:x>
+        <pd:y>97</pd:y>
         <config>
             <StartTime>1692803406000</StartTime>
             <Frequency>true</Frequency>
@@ -21,16 +22,18 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>524</pd:endX>
-    <pd:endY>72</pd:endY>
+    <pd:endX>929</pd:endX>
+    <pd:endY>74</pd:endY>
     <pd:errorSchemas/>
-    <pd:processVariables/>
+    <pd:processVariables>
+        <Context ref="pfx3:Context"/>
+    </pd:processVariables>
     <pd:targetNamespace>http://xmlns.example.com/1692803049608</pd:targetNamespace>
     <pd:activity name="JMS Queue Requestor">
         <pd:type>com.tibco.plugin.jms.JMSQueueRequestReplyActivity</pd:type>
         <pd:resourceType>ae.activities.JMSQueueRequestReplyActivity</pd:resourceType>
-        <pd:x>225</pd:x>
-        <pd:y>81</pd:y>
+        <pd:x>651</pd:x>
+        <pd:y>104</pd:y>
         <config>
             <PermittedMessageType>XML Text</PermittedMessageType>
             <SessionAttributes>
@@ -55,7 +58,7 @@
                         <ns3:Header>
                             <pfx3:Context>
                                 <pfx3:correlationId>
-                                    <xsl:value-of select="'1111111'"/>
+                                    <xsl:value-of select="$Get-UUID/uuid/correlationID"/>
                                 </pfx3:correlationId>
                             </pfx3:Context>
                             <ns3:timestamp>
@@ -88,8 +91,8 @@
     <pd:activity name="Log">
         <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
         <pd:resourceType>ae.activities.log</pd:resourceType>
-        <pd:x>370</pd:x>
-        <pd:y>72</pd:y>
+        <pd:x>796</pd:x>
+        <pd:y>95</pd:y>
         <config>
             <role>User</role>
         </config>
@@ -101,12 +104,59 @@
             </ns:ActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="GenerateUUID">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>270</pd:x>
+        <pd:y>273</pd:y>
+        <config>
+            <processName>/Processes/Commons/GenerateUUID.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Assign Context">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>475</pd:x>
+        <pd:y>98</pd:y>
+        <config>
+            <variableName>Context</variableName>
+        </config>
+        <pd:inputBindings>
+            <pfx3:Context>
+                <pfx3:correlationId>
+                    <xsl:value-of select="$Get-UUID/uuid/correlationID"/>
+                </pfx3:correlationId>
+            </pfx3:Context>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GenerateUUIDv2">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>183</pd:x>
+        <pd:y>98</pd:y>
+        <config>
+            <processName>/Processes/Commons/GenerateUUIDv2.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Get UUID">
+        <pd:type>com.tibco.pe.core.GetSharedVariableActivity</pd:type>
+        <pd:resourceType>ae.activities.getSharedVariable</pd:resourceType>
+        <pd:x>324</pd:x>
+        <pd:y>97</pd:y>
+        <config>
+            <variableConfig>/Resources/SharedVariables/UUID.jobsharedvariable</variableConfig>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
     <pd:transition>
         <pd:from>Timer</pd:from>
-        <pd:to>JMS Queue Requestor</pd:to>
+        <pd:to>GenerateUUID</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>false()</pd:xpath>
     </pd:transition>
     <pd:transition>
         <pd:from>JMS Queue Requestor</pd:from>
@@ -118,6 +168,41 @@
     <pd:transition>
         <pd:from>Log</pd:from>
         <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateUUID</pd:from>
+        <pd:to>Assign Context</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign Context</pd:from>
+        <pd:to>JMS Queue Requestor</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Timer</pd:from>
+        <pd:to>GenerateUUIDv2</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateUUIDv2</pd:from>
+        <pd:to>Get UUID</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Get UUID</pd:from>
+        <pd:to>Assign Context</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
