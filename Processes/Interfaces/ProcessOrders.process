@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pfx6="http://www.tibco.com/schemas/6.HTTP/Resources/Schemas/Orchestration/ProcessOrdersResponse" xmlns:pfx7="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Order" xmlns:pfx8="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Orders" xmlns:pfx="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/ProcessCountriesRequest" xmlns:pfx2="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/ProcessCountriesResponse" xmlns:pfx3="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Countries" xmlns:ns="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Country" xmlns:pfx4="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Response" xmlns:pfx5="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/ProcessOrdersRequest" xmlns:ns2="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/ShipInfo" xmlns:ns1="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Header" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pd="http://xmlns.tibco.com/bw/process/2003">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/ProcessCountriesRequest" schemaLocation="/Resources/Schemas/Orchestration/ProcessCountriesRequest.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/ProcessCountriesResponse" schemaLocation="/Resources/Schemas/Orchestration/ProcessCountriesResponse.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Models/Countries" schemaLocation="/Resources/Schemas/Models/Countries.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/0.ProjectZero/Resources/Schemas/Commons/Response" schemaLocation="/Resources/Schemas/Commons/Response.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/Udemy_TIBCO_course/Resources/Schemas/Services/ProcessOrdersRequest" schemaLocation="/Resources/Schemas/Orchestration/ProcessOrdersRequest.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/6.HTTP/Resources/Schemas/Orchestration/ProcessOrdersResponse" schemaLocation="/Resources/Schemas/Orchestration/ProcessOrdersResponse.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Order" schemaLocation="/Resources/Schemas/Models/Order.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/1.Schemas/Resources/Schemas/Models/Orders" schemaLocation="/Resources/Schemas/Models/Orders.xsd"/>
+    <pd:name>Processes/Interfaces/ProcessOrders.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx5:ProcessOrdersRequest"/>
+    <pd:startX>67</pd:startX>
+    <pd:startY>194</pd:startY>
+    <pd:returnBindings>
+        <pfx6:ProcessOrdersResponse>
+            <xsl:copy-of select="$Start/pfx5:ProcessOrdersRequest/ns1:Header"/>
+            <pfx6:Body>
+                <xsl:choose>
+                    <xsl:when test="$Start/pfx5:ProcessOrdersRequest/pfx5:Body/pfx5:method = 'GET'">
+                        <xsl:copy-of select="$Map-Response-1/pfx4:Response"/>
+                    </xsl:when>
+                    <xsl:when test="$Start/pfx5:ProcessOrdersRequest/pfx5:Body/pfx5:method = 'POST'">
+                        <xsl:copy-of select="$Map-Response/pfx4:Response"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:copy-of select="$Map-Response-2/pfx4:Response"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </pfx6:Body>
+        </pfx6:ProcessOrdersResponse>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx6:ProcessOrdersResponse"/>
+    <pd:endX>645</pd:endX>
+    <pd:endY>194</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1693303814161</pd:targetNamespace>
+    <pd:activity name="Create Sample Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>243</pd:x>
+        <pd:y>365</pd:y>
+        <config>
+            <element ref="pfx8:Order"/>
+        </config>
+        <pd:inputBindings>
+            <pfx8:Order>
+                <pfx7:Order>
+                    <pfx7:CustomerID>
+                        <xsl:value-of select="'GREAL'"/>
+                    </pfx7:CustomerID>
+                    <pfx7:EmployeeID>
+                        <xsl:value-of select="'1'"/>
+                    </pfx7:EmployeeID>
+                    <pfx7:OrderDate>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx7:OrderDate>
+                    <pfx7:RequiredDate>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx7:RequiredDate>
+                    <ns2:ShipInfo>
+                        <ns2:ShipVia>
+                            <xsl:value-of select="3"/>
+                        </ns2:ShipVia>
+                        <ns2:Freight>
+                            <xsl:value-of select="4.3"/>
+                        </ns2:Freight>
+                        <ns2:ShipName>
+                            <xsl:value-of select="'Rosa'"/>
+                        </ns2:ShipName>
+                        <ns2:ShipAddress>
+                            <xsl:value-of select="'2732 Baker Blvd.'"/>
+                        </ns2:ShipAddress>
+                        <ns2:ShipCity>
+                            <xsl:value-of select="'Eugene'"/>
+                        </ns2:ShipCity>
+                        <ns2:ShipRegion>
+                            <xsl:value-of select="'OR'"/>
+                        </ns2:ShipRegion>
+                        <ns2:ShipPostalCode>
+                            <xsl:value-of select="97403"/>
+                        </ns2:ShipPostalCode>
+                        <ns2:ShipCountry>
+                            <xsl:value-of select="'EUA'"/>
+                        </ns2:ShipCountry>
+                    </ns2:ShipInfo>
+                </pfx7:Order>
+                <pfx7:Order>
+                    <pfx7:CustomerID>
+                        <xsl:value-of select="'GREAL'"/>
+                    </pfx7:CustomerID>
+                    <pfx7:EmployeeID>
+                        <xsl:value-of select="'50'"/>
+                    </pfx7:EmployeeID>
+                    <pfx7:OrderDate>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx7:OrderDate>
+                    <pfx7:RequiredDate>
+                        <xsl:value-of select="current-dateTime()"/>
+                    </pfx7:RequiredDate>
+                    <ns2:ShipInfo>
+                        <ns2:ShipVia>
+                            <xsl:value-of select="3"/>
+                        </ns2:ShipVia>
+                        <ns2:Freight>
+                            <xsl:value-of select="4.3"/>
+                        </ns2:Freight>
+                        <ns2:ShipName>
+                            <xsl:value-of select="'Rosa'"/>
+                        </ns2:ShipName>
+                        <ns2:ShipAddress>
+                            <xsl:value-of select="'2732 Baker Blvd.'"/>
+                        </ns2:ShipAddress>
+                        <ns2:ShipCity>
+                            <xsl:value-of select="'Eugene'"/>
+                        </ns2:ShipCity>
+                        <ns2:ShipRegion>
+                            <xsl:value-of select="'OR'"/>
+                        </ns2:ShipRegion>
+                        <ns2:ShipPostalCode>
+                            <xsl:value-of select="97403"/>
+                        </ns2:ShipPostalCode>
+                        <ns2:ShipCountry>
+                            <xsl:value-of select="'EUA'"/>
+                        </ns2:ShipCountry>
+                    </ns2:ShipInfo>
+                </pfx7:Order>
+            </pfx8:Order>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Render XML">
+        <pd:type>com.tibco.plugin.xml.XMLRendererActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLRendererActivity</pd:resourceType>
+        <pd:x>398</pd:x>
+        <pd:y>364</pd:y>
+        <config>
+            <renderAsText>text</renderAsText>
+            <validateInput>true</validateInput>
+            <textEncoding>UTF-8</textEncoding>
+            <term ref="pfx8:Order"/>
+        </config>
+        <pd:inputBindings>
+            <xsl:copy-of select="$Create-Sample-Data/pfx8:Order"/>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Validate HTTP Method">
+        <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
+        <pd:resourceType>ae.activities.null</pd:resourceType>
+        <pd:x>240</pd:x>
+        <pd:y>201</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Map Response">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>464</pd:x>
+        <pd:y>195</pd:y>
+        <config>
+            <element ref="pfx4:Response"/>
+        </config>
+        <pd:inputBindings>
+            <pfx4:Response>
+                <pfx4:responseMessage>
+                    <xsl:value-of select="' {&quot;message&quot;:&quot;item has been created&quot;}'"/>
+                </pfx4:responseMessage>
+                <pfx4:responseStatus>
+                    <xsl:value-of select="'SUCCESS'"/>
+                </pfx4:responseStatus>
+            </pfx4:Response>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Map-Response-1">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>553</pd:x>
+        <pd:y>365</pd:y>
+        <config>
+            <element ref="pfx4:Response"/>
+        </config>
+        <pd:inputBindings>
+            <pfx4:Response>
+                <pfx4:responseMessage>
+                    <xsl:value-of select="' {&quot;message&quot;:&quot;items have been retrieved&quot;}'"/>
+                </pfx4:responseMessage>
+                <pfx4:responseStatus>
+                    <xsl:value-of select="'SUCCESS'"/>
+                </pfx4:responseStatus>
+                <pfx4:data>
+                    <xsl:copy-of select="$Render-XML/xmlString"/>
+                </pfx4:data>
+            </pfx4:Response>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Map-Response-2">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>243</pd:x>
+        <pd:y>62</pd:y>
+        <config>
+            <element ref="pfx4:Response"/>
+        </config>
+        <pd:inputBindings>
+            <pfx4:Response>
+                <pfx4:responseMessage>
+                    <xsl:value-of select="' {&quot;message&quot;:&quot;method is not available&quot;}'"/>
+                </pfx4:responseMessage>
+                <pfx4:responseStatus>
+                    <xsl:value-of select="'SUCCESS'"/>
+                </pfx4:responseStatus>
+            </pfx4:Response>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Validate HTTP Method</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Validate HTTP Method</pd:from>
+        <pd:to>Map Response</pd:to>
+        <pd:xpathDescription>POST</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/pfx5:ProcessOrdersRequest/pfx5:Body/pfx5:method = 'POST'</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Validate HTTP Method</pd:from>
+        <pd:to>Create Sample Data</pd:to>
+        <pd:xpathDescription>GET</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/pfx5:ProcessOrdersRequest/pfx5:Body/pfx5:method = 'GET'</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Create Sample Data</pd:from>
+        <pd:to>Render XML</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Render XML</pd:from>
+        <pd:to>Map-Response-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map Response</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map-Response-1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Validate HTTP Method</pd:from>
+        <pd:to>Map-Response-2</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map-Response-2</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
